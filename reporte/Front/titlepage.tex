@@ -1,0 +1,270 @@
+Download
+
+Source
+
+PDF
+Actions
+   Copy Project
+   Word Count
+Sync
+   Dropbox
+   Git
+   GitHub
+Settings
+Compiler
+
+pdfLaTeX
+TeX Live version
+
+2022
+Main document
+
+main.tex
+Spell check
+
+English
+Dictionary
+Auto-complete
+
+On
+Auto-close Brackets
+
+On
+Code check
+
+On
+Editor theme
+
+overleaf
+Overall theme
+
+Default
+Keybindings
+
+None
+Font Size
+
+12px
+Font Family
+
+Lucida / Source Code Pro
+Line Height
+
+Normal
+PDF Viewer
+
+Overleaf
+Help
+   Show Hotkeys
+   Documentation
+   Contact Us
+Gestion_de_datos
+
+File outline
+Overleaf has upgraded the source editor. You can still use the old editor by selecting "Source (legacy)".
+
+Click to learn more and give feedback
+Editor mode.
+
+
+ 
+Selection deleted
+▾
+▾
+▾
+▾
+▾
+▾
+% !TEX root = ../main.tex
+
+%----------------------------------------------------------------------------------------
+% TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\newgeometry{margin=1in}
+\begin{titlepage}
+
+% Make the title page mostly inert to the parskip-setting.
+\setlength{\parskip}{0pt}
+
+\begin{center}
+\includegraphics[width=1\textwidth]{Figures/upc_p}
+
+%\ifxetex
+    \vspace{0.6cm}
+    {\zhawtitlefont\color{zhawblue}\LARGE \univname\par}   % University
+    \vspace{0.2cm}
+%\else
+%    \vspace{0.87cm}
+%    {\includegraphics[height=17.9pt]{Figures/zhaw_font_eng_font}\par}
+%    \vspace{0.05cm}
+%\fi
+{\Large  \deptname\par}                      % Department
+\vspace{0.2cm}
+%{\Large A \instname\par}                                 % Institute
+\vspace{3.5cm}                            
+\textsc{\Large \ttype}                                 % Thesis type
+\vspace{0.2cm}
+\HRule 
+\vspace{0.4cm}
+{\huge \bfseries \ttitle\par}                          % Thesis title
+\vspace{0.4cm}  
+\HRule
+\vspace{1.5cm}
+
+ 
+\begin{minipage}[t]{0.4\textwidth}
+\begin{flushleft} 
+    \large
+    \emph{Integrantes:}\\
+    \authorname
+\end{flushleft}
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+\begin{flushright} 
+    \large
+    \emph{Profesor:} \\
+    \supnameA \\
+    \supnameB
+\end{flushright}
+\end{minipage}
+\vspace{2cm}
+ 
+\vfill
+
+{\large
+Fecha de entrega\\
+28 de Octubre de 2022 \\
+\vspace{1.5cm}
+%Study program:\\
+%\studyprog\\
+}
+\vfill
+\end{center}
+\end{titlepage}
+\restoregeometry
+
+Wieman
+0 of 0
+×
+Replace with
+UNIVERSIDAD PERUANA DE CIENCIAS APLICADAS
+Maestría en Data Science
+GESTIÓN DE DATOS
+Análisis de matrícula de estudiantes de nivel
+inicial de Educación Básica Regular del 2020,
+2021 y 2022
+Integrantes:
+Alexander Cubas Francia
+Ernesto Igor Laura Mamani
+Grabiela Quispe Ochoa
+Yerimen Antonio Campos Luyo
+Profesor:
+Oscar Efraín Ramos Ponce
+Fecha de entrega
+28 de Octubre de 2022
+iii
+Índice
+1 Introducción 1
+1.1 Descripción de la información . . . . . . . . . . . . . . . . . . . . . . . . 1
+1.2 Datos utilizados . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1
+1.3 Importancia de los datos . . . . . . . . . . . . . . . . . . . . . . . . . . . 1
+2 Introduction to LATEX 3
+2.1 Filling in Your Information in the main.tex File . . . . . . . . . . . . . 3
+2.1.1 References . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+3 Metodología 5
+3.1 Metodología utilizada . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+3.2 Herramientas usadas . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+3.3 Trabajo con los datos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+3.4 Uso de shiny . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+4 Resultados 7
+4.1 Evolución mensual de matrículas . . . . . . . . . . . . . . . . . . . . . . 7
+5 Anexos 11
+5.1 Código de conexión a la base de datos . . . . . . . . . . . . . . . . . . . 11
+5.2 Evolución mensual de matrículas . . . . . . . . . . . . . . . . . . . . . . 11
+Bibliografía 13
+1
+Capítulo 1
+Introducción
+1.1 Descripción de la información
+En el presente trabajo se está realizando ...
+1.2 Datos utilizados
+La información con la que se va a trabajar está conformada por los datos de alumnos
+de niveles inicial, primaria y secundaria de colegios en todo el Perú, esta información
+corresponde a los 3 últimos años, el detalle de esta entidad se ve en la tabla Table 1.1
+1.3 Importancia de los datos
+Debido a que la información trabajada proviene del ámbito educativo de níveles
+básicos, se pueden generar estadísticas para poder evaluar el estado actual educa-
+tivo, ...
+2 Capítulo 1. Introducción
+TABLA 1.1: Detalle de los campos de la entidad estudiante
+Columna Descripción
+ID Año Identificador del año escolar
+Departamento Nombre del departamento
+Provincia Nombre de la provincia
+Distrito Nombre del distrito
+Centro Poblado Centro poblado
+NLongitud IE Coordenada de la longitud de la IE
+NLatitud IE Coordenada de la latitud de la IE
+DRE Dirección regional de educación
+UGEL Ugel a la que pertenece la IE
+Cod Mod NN
+Anexo NN
+Nombre IE Nombre de la Institución educativa
+D Gestión NN
+Dsc Turno Descripción del turno
+Modalidad Modalidad
+Nivel Educativo Nivel en el que se encuentra el estudiante
+Fecha Matrícula Fecha de la matrícula
+ID Persona Identificador del estudiante
+Documento Identidad Documento de identidad
+Sexo Sexo del alumno
+Madre vive Indicador si la madre vive
+Padre vive Indicador si el padre vive
+Dsc Grado Descripción del grado
+Dsc Sección Descripción de la sección
+Nacionalidad Nacionalidad del estudiante
+Dsc Discapacidad Descripción de discapacidad
+Dirección Dirección del estudiante
+Lugar Lugar de la dirección
+Ubigeo Ubigeo del estudiante
+3
+Capítulo 2
+Introduction to LATEX
+2.1 Filling in Your Information in the main.tex File
+2.1.1 References
+The options used in the main.tex file mean that the in-text citations of references
+are formatted with the author(s) listed with the date of the publication. Multiple
+references are separated by semicolons (e.g. [1, 2]) and references with more than
+three authors only show the first author with et al. indicating there are more authors
+(e.g. [3]). This is done automatically for you. To see how you use references, have
+a look at the Chapter1.tex source file. Many reference managers allow you to
+simply drag the reference into the document as you type.
+5
+Capítulo 3
+Metodología
+3.1 Metodología utilizada
+En el presente proyecto se ha utilizado la metología CRISP DM, pero sólo en las
+etapas iniciales que tienen que ver con el trabajo de los datos. En la imagen Figure 3.1
+se pueden ver resaltadas las etapas cubiertas.
+IMAGEN 3.1: Secciones cubiertas en el proyecto
+3.2 Herramientas usadas
+Se han hecho uso de las siguientes herramientas:
+• Base de datos MySql
+• Servicio RDS de AWS
+• R Studio
+• JetBrains DataGrip
+• Shiny
+6 Capítulo 3. Metodología
+Se obtuvo un archivo CSV con toda la información de estudiantes, este archivo fue
+subido mediante DataGrip a una BD MySQL, previamente creada como un servi-
+cio RDS de AWS, con estos datos cargados se realizaron procesos mediante R para
+obtener información que posteriormente fueron registrados en otra base de datos y
+mostrados mediante una aplicación Shiny.
+En la imagen Figure 3.2 se puede ver el flujo del proceso en este trabajo de análisis.
+IMAGEN 3.2: Herramientas usadas
+3.3 Trabajo con los datos
+Para el trabajo con R y MySQL se hizo uso de la bilbioteca RMySQL y DBI, el código
+para la conexión se encuentra en la sección 5.1.
+3.4 Uso de shiny
+...

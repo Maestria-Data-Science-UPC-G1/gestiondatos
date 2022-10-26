@@ -1,0 +1,52 @@
+\chapter{Anexos}
+\label{Anexos} % For referencing the chapter elsewhere,
+
+ \section{Código de conexión a la base de datos}\label{codigo_conexionbd}
+\begin{lstlisting}[language=R]
+library(shiny)
+library(ggplot2)
+library(DBI)
+library(RMySQL)
+library(reshape2)
+
+id_host = "localhost"
+db <- dbConnect(RMySQL::MySQL(),
+                dbname = "bd_gestiondatos",
+                host = id_host,
+                user = "root",
+                password = rstudioapi::askForPassword("Database password"),
+                Port     = 3306)
+\end{lstlisting}
+
+\section{Evolución mensual de matrículas}\label{evolucion_matriculas}
+\begin{lstlisting}[language=R]
+getMonthDay = function(arrayMes) {
+  month = as.Date(arrayMes)
+  fec = format(month, "%Y-%m")
+}
+
+getFormatedMonth <- function(arrayMes) {
+  nombre_meses <- c("01"="Enero", "02"="Febrero", "03"="Marzo",
+                    "04"="Abril", "05"="Mayo", "06"="Junio",
+                    "07"="Julio", "08"="Agosto", "09"="Setiembre",
+                    "10"="Octubre", "11"="Noviembre", "12"="Diciembre")
+  mo = nombre_meses[substr(arrayMes, 6, 7)]
+}
+
+df <- dbGetQuery(db, 'SELECT * FROM estudiante')
+df2 = df
+
+df2$month = getMonthDay(df2$FECHA_MATRICULA)
+df2 = data.frame(df2$FECHA_MATRICULA, df2$ID_PERSONA, df2$month)
+
+df_graph = aggregate(x = df2.ID_PERSONA ~ df2.month, 
+                     data = df2, 
+                     FUN = length)
+
+df_graph$df2.month <- factor(df_graph$df2.month, levels = df_graph$df2.month, ordered=T)
+
+df_graph$formated_month = getFormatedMonth(df_graph$df2.month)
+df_graph$anho = substr(df_graph$df2.month, 1, 4)
+
+
+\end{lstlisting}
