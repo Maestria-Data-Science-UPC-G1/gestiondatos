@@ -12,9 +12,13 @@ db <- dbConnect(RMySQL::MySQL(),
                 dbname = "bd_gestiondatos",
                 host = id_host,
                 user = "root",
-                password = rstudioapi::askForPassword("Database password"),
+                password = rstudioapi::askForPassword("DB password"),
                 Port     = 3306)
 
+df <- dbGetQuery(db, 'SELECT * FROM estudiante')
+
+######################################################################################
+# Procesamiento para evaluacion mensual de matrículas
 getMonthDay = function(arrayMes) {
   month = as.Date(arrayMes)
   fec = format(month, "%Y-%m")
@@ -29,7 +33,7 @@ getFormatedMonth <- function(arrayMes) {
 }
 
 # Evolución mensual de matrículas
-df <- dbGetQuery(db, 'SELECT * FROM estudiante')
+
 df2 = df
 
 df2$month = getMonthDay(df2$FECHA_MATRICULA)
@@ -44,36 +48,34 @@ df_graph$df2.month <- factor(df_graph$df2.month, levels = df_graph$df2.month, or
 df_graph$formated_month = getFormatedMonth(df_graph$df2.month)
 df_graph$anho = substr(df_graph$df2.month, 1, 4)
 
-subset1 = df_graph[df_graph$anho == '2020', ]
-subset2 = df_graph[df_graph$anho == '2021', ]
-subset3 = df_graph[df_graph$anho == '2022', ]
+# subset1 = df_graph[df_graph$anho == '2020', ]
+# subset2 = df_graph[df_graph$anho == '2021', ]
+# subset3 = df_graph[df_graph$anho == '2022', ]
+# 
+# id1=factor(subset1$formated_month, levels=c("Enero", "Febrero", "Marzo",
+#                                             "Abril", "Mayo", "Junio",
+#                                             "Julio", "Agosto", "Setiembre",
+#                                             "Octubre", "Noviembre", "Diciembre"))
+# id2=factor(subset2$formated_month, levels=c("Enero", "Febrero", "Marzo",
+#                                             "Abril", "Mayo", "Junio",
+#                                             "Julio", "Agosto", "Setiembre",
+#                                             "Octubre", "Noviembre", "Diciembre"))
+# id3=factor(subset3$formated_month, levels=c("Enero", "Febrero", "Marzo",
+#                                             "Abril", "Mayo", "Junio",
+#                                             "Julio", "Agosto", "Setiembre",
+#                                             "Octubre", "Noviembre", "Diciembre"))
+# 
+# ggplot(subset3, aes(x = id3, y = df2.ID_PERSONA, label=df2.ID_PERSONA, group = 1)) +
+#   geom_line(linetype = 2, colour = "#3B80BD", size = 1) + 
+#   geom_point(colour = "#3B80BD", size = 5) + 
+#   geom_text(hjust=0, vjust=0) + 
+#   labs(x = "Meses", y = "# Matrículas", 
+#        title = "Evolución mensual de matrículas") +
+#   theme(panel.background = element_blank(),
+#         axis.text.y = element_blank(),
+#         axis.ticks.y = element_blank())
 
-id1=factor(subset1$formated_month, levels=c("Enero", "Febrero", "Marzo",
-                                            "Abril", "Mayo", "Junio",
-                                            "Julio", "Agosto", "Setiembre",
-                                            "Octubre", "Noviembre", "Diciembre"))
-id2=factor(subset2$formated_month, levels=c("Enero", "Febrero", "Marzo",
-                                            "Abril", "Mayo", "Junio",
-                                            "Julio", "Agosto", "Setiembre",
-                                            "Octubre", "Noviembre", "Diciembre"))
-id3=factor(subset3$formated_month, levels=c("Enero", "Febrero", "Marzo",
-                                            "Abril", "Mayo", "Junio",
-                                            "Julio", "Agosto", "Setiembre",
-                                            "Octubre", "Noviembre", "Diciembre"))
-
-ggplot(subset3, aes(x = id3, y = df2.ID_PERSONA, label=df2.ID_PERSONA, group = 1)) +
-  geom_line(linetype = 2, colour = "#3B80BD", size = 1) + 
-  #geom_point(aes(size = 0.1)) +
-  #geom_point(aes(colour = "red")) +
-  geom_point(colour = "#3B80BD", size = 5) + 
-  geom_text(hjust=0, vjust=0) + 
-  labs(x = "Meses", y = "# Matrículas", 
-       title = "Evolución mensual de matrículas") +
-  theme(panel.background = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank())
-
-
+######################################################################################
 # Niveles educativos
 niveles_educativos = dbGetQuery(db, 'select NIVEL_EDUCATIVO,ID_ANIO,count(*)CNT from estudiante group by NIVEL_EDUCATIVO,ID_ANIO')
 
@@ -95,6 +97,7 @@ niveles_educativos = dbGetQuery(db, 'select NIVEL_EDUCATIVO,ID_ANIO,count(*)CNT 
 #        caption = 'Fuente de datos : Ministerio de educación',
 #   )
 
+######################################################################################
 # Dona con la descripcion del sexo
 
 ValidCampos= df[,c(1, 20, 21)]
@@ -126,6 +129,7 @@ agrupSexo2
 #   labs(title="Gráfico de Dona")+
 #   xlim(0.5,2.5)
 
+######################################################################################
 # Validacion de DNI
 
 ValidDNI = ValidCampos
@@ -153,48 +157,102 @@ agrupValDNI2
 #   labs(title="Distribucion % por genero")+
 #   xlim(0.5,2.5)
 
+######################################################################################
 #PROCESAMIENTO DE DATA PARA DISCAPACIDAD
+
+dfdisc = df[c("ID_ANIO","DSC_DISCAPACIDAD","ID_PERSONA")]
+
+dfdiscFilt <- dfdisc %>% filter(DSC_DISCAPACIDAD != "")
+
+dfdiscFilt
+
+grupoDisc <- dfdiscFilt %>%
+  group_by(ID_ANIO,DSC_DISCAPACIDAD) %>%
+  summarise(
+    T_dfdisc = n()
+  )
+
+#grupoDisc
+
+#Gráfico ggplot2
+# g1 = grupoDisc[grupoDisc$ID_ANIO == '2020', ]
+# g2 = grupoDisc[grupoDisc$ID_ANIO == '2021', ]
+# g3 = grupoDisc[grupoDisc$ID_ANIO == '2022', ]
+# 
+# ggplot(g3, aes(x = DSC_DISCAPACIDAD, y=T_dfdisc)) +
+#   geom_bar(stat = "identity", fill='#3B80BD') +
+#   coord_flip() +
+#   xlab("DISCAPACIDAD") + 
+#   ylab("CANTIDAD DE ESTUDIANTES") +
+#   theme(#axis.text.x =element_blank(),
+#     axis.ticks.x = element_blank(),
+#     #axis.text.y = element_blank(),
+#     axis.ticks.y = element_blank(),
+#     panel.background = element_blank()
+#   ) 
+
+######################################################################################
+#PROCESAMIENTO DE DATA PARA NACIONALIDAD
 
 dfpais <- df[c("ID_ANIO","NACIONALIDAD","ID_PERSONA")]
 
 dfpaisFilt <- dfpais %>%
   filter(NACIONALIDAD != "Perú" & NACIONALIDAD != "PERU" & NACIONALIDAD != " " & NACIONALIDAD != "")
 
+dfpaisFilt 
+
 grupoPais <- dfpaisFilt %>%
   group_by(ID_ANIO,NACIONALIDAD) %>%
   summarise(
-    T_dfpais = n()
+    CANTIDAD = n()
   )
 
-w1 = grupoPais[grupoPais$ID_ANIO == '2020', ]
-w2 = grupoPais[grupoPais$ID_ANIO == '2021', ]
-w3 = grupoPais[grupoPais$ID_ANIO == '2022', ]
-
-ggplot(w2, aes(x=NACIONALIDAD,y=T_dfpais))+
-  geom_bar(stat = "identity") +
-  coord_flip()
-
-
+######################################################################################
 ui <- fluidPage(
-  selectInput(
-    "anho",
-    "Año:",
-    c("2020" = "2020",
-      "2021" = "2021",
-      "2022" = "2022"),
-    selected = "2020"
+  # theme = bslib::bs_theme(bootswatch = "yeti"),
+  title = "Análisis de estudiantes",
+  titlePanel(
+    # Título del app o descripción
+    "Análisis de estudiantes"
   ),
-  plotOutput("histogMatriculas"),
-  plotOutput("histogNivEducativos"),
-  plotOutput("histogSexo"),
-  plotOutput("histogValidacionDNI"),
-  tableOutput("grupPais")
+  fluidRow(
+    selectInput(
+      "anho",
+      "Año:",
+      c("2020" = "2020",
+        "2021" = "2021",
+        "2022" = "2022"),
+      selected = "2020"
+    )
+  ),
+  fluidRow(
+    column(4,
+      plotOutput("histogNivEducativos")
+    ),
+    column(5,
+      plotOutput("histogMatriculas")
+    ),
+    column(3,
+      plotOutput("grupDisc")
+    )
+  ),
+  fluidRow(
+    column(6,
+           "Estudiantes de otra nacionalidad",
+           dataTableOutput("grupPais") 
+    ),
+    column(3,
+           plotOutput("histogSexo")
+    ),
+    column(3,
+           plotOutput("histogValidacionDNI")
+    )
+  )
 )
 
 server <- function(input, output, session) {
-  #anho_selected = renderText({paste("You chose", input$anho) })
   
-  #output$saludo <- anho_selected
+  # thematic::thematic_shiny()
   
   output$histogMatriculas <- renderPlot({
     # Gráfico
@@ -254,7 +312,7 @@ server <- function(input, output, session) {
       coord_polar(theta = "y")+
       scale_fill_manual(values=c("#E11E1E","#3B80BD"))+
       theme_void()+
-      labs(title="Gráfico de Dona")+
+      labs(title="Género")+
       xlim(0.5,2.5)
   }, res = 96)
   # 
@@ -269,16 +327,35 @@ server <- function(input, output, session) {
       coord_polar(theta = "y")+
       scale_fill_manual(values=c("salmon","steelblue","orange","gray"))+
       theme_void()+
-      labs(title="Distribucion % por genero")+
+      labs(title="DNI Validados")+
       xlim(0.5,2.5)
 
   }, res = 96)
   
-  output$grupPais <- renderDataTable(
-    grupoPais,
-    options = list(pageLength = 5, searching = FALSE)
-  )
+  output$grupDisc <- renderPlot({
+    
+    subsetDiscapacidad = grupoDisc[grupoDisc$ID_ANIO == input$anho, ]
+    
+    ggplot(subsetDiscapacidad, aes(x = DSC_DISCAPACIDAD, y=T_dfdisc)) +
+      geom_bar(stat = "identity", fill='#3B80BD') +
+      coord_flip() +
+      labs(title ='Discapacidad',
+           x = 'DISCAPACIDAD',
+           y = 'CANTIDAD DE ESTUDIANTES',
+           subtitle = 'cantidades por nivel educativo',
+           caption = 'Fuente de datos : Ministerio de educación'
+      ) +
+      theme(
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.background = element_blank()
+      ) 
+  })
   
+  output$grupPais <- renderDataTable(
+    grupoPais[grupoPais$ID_ANIO == input$anho, ],
+    options = list(pageLength = 10, searching = FALSE)
+  )
 }
 
 shinyApp(ui, server)
