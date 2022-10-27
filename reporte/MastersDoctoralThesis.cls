@@ -9,7 +9,7 @@
 \usepackage[utf8]{inputenc}    % Specify input encoding
 \usepackage[T1]{fontenc}       % Specify font encoding
 
-
+\usepackage{geometry}
 
 % Set main fonts
 % Fonts catalogue: https://tug.org/FontCatalogue/
