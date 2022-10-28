@@ -64,16 +64,35 @@ df_graph$anho = substr(df_graph$df2.month, 1, 4)
 #                                             "Abril", "Mayo", "Junio",
 #                                             "Julio", "Agosto", "Setiembre",
 #                                             "Octubre", "Noviembre", "Diciembre"))
-# 
-# ggplot(subset3, aes(x = id3, y = df2.ID_PERSONA, label=df2.ID_PERSONA, group = 1)) +
-#   geom_line(linetype = 2, colour = "#3B80BD", size = 1) + 
-#   geom_point(colour = "#3B80BD", size = 5) + 
-#   geom_text(hjust=0, vjust=0) + 
-#   labs(x = "Meses", y = "# Matrículas", 
-#        title = "Evolución mensual de matrículas") +
+# require(gridExtra)
+# ss1 = ggplot(subset1, aes(x = id1, y = df2.ID_PERSONA, label=df2.ID_PERSONA, group = 1)) +
+#   geom_line(linetype = 2, colour = "#3B80BD", size = 1) +
+#   geom_point(colour = "#3B80BD", size = 5) +
+#   geom_text(hjust=0, vjust=0) +
+#   labs(x = "Meses", y = "# Matrículas",
+#        title = "Evolución mensual de matrículas 2020") +
 #   theme(panel.background = element_blank(),
 #         axis.text.y = element_blank(),
 #         axis.ticks.y = element_blank())
+# ss2 = ggplot(subset2, aes(x = id2, y = df2.ID_PERSONA, label=df2.ID_PERSONA, group = 1)) +
+#   geom_line(linetype = 2, colour = "#3B80BD", size = 1) +
+#   geom_point(colour = "#3B80BD", size = 5) +
+#   geom_text(hjust=0, vjust=0) +
+#   labs(x = "Meses", y = "# Matrículas",
+#        title = "Evolución mensual de matrículas 2021") +
+#   theme(panel.background = element_blank(),
+#         axis.text.y = element_blank(),
+#         axis.ticks.y = element_blank())
+# ss3 = ggplot(subset3, aes(x = id3, y = df2.ID_PERSONA, label=df2.ID_PERSONA, group = 1)) +
+#   geom_line(linetype = 2, colour = "#3B80BD", size = 1) +
+#   geom_point(colour = "#3B80BD", size = 5) +
+#   geom_text(hjust=0, vjust=0) +
+#   labs(x = "Meses", y = "# Matrículas",
+#        title = "Evolución mensual de matrículas 2022") +
+#   theme(panel.background = element_blank(),
+#         axis.text.y = element_blank(),
+#         axis.ticks.y = element_blank())
+# grid.arrange(ss1, ss2, ss3, ncol=2)
 
 ######################################################################################
 # Niveles educativos
@@ -82,20 +101,48 @@ niveles_educativos = dbGetQuery(db, 'select NIVEL_EDUCATIVO,ID_ANIO,count(*)CNT 
 # s1 = niveles_educativos[niveles_educativos$ID_ANIO == '2020', ]
 # s2 = niveles_educativos[niveles_educativos$ID_ANIO == '2021', ]
 # s3 = niveles_educativos[niveles_educativos$ID_ANIO == '2022', ]
+
 # 
-# ggplot(s3,
+# gg1 = ggplot(s1,
 #        aes(x = NIVEL_EDUCATIVO, y = CNT, label=CNT)) +
 #   geom_bar(stat = "identity",fill='#3B80BD')+
 #   geom_text(hjust=0, vjust=0) +
 #   theme(panel.background = element_blank(),
 #         axis.text.y = element_blank(),
 #         axis.ticks.y = element_blank())+
-#   labs(title ='Nivel educativo',
+#   labs(title ='Nivel educativo 2020',
 #        x = 'Nivel educativo',
 #        y = 'Cantidad',
 #        subtitle = 'cantidades por nivel educativo',
 #        caption = 'Fuente de datos : Ministerio de educación',
 #   )
+# gg2 = ggplot(s2,
+#        aes(x = NIVEL_EDUCATIVO, y = CNT, label=CNT)) +
+#   geom_bar(stat = "identity",fill='#3B80BD')+
+#   geom_text(hjust=0, vjust=0) +
+#   theme(panel.background = element_blank(),
+#         axis.text.y = element_blank(),
+#         axis.ticks.y = element_blank())+
+#   labs(title ='Nivel educativo 2021',
+#        x = 'Nivel educativo',
+#        y = 'Cantidad',
+#        subtitle = 'cantidades por nivel educativo',
+#        caption = 'Fuente de datos : Ministerio de educación',
+#   )
+# gg3 = ggplot(s2,
+#        aes(x = NIVEL_EDUCATIVO, y = CNT, label=CNT)) +
+#   geom_bar(stat = "identity",fill='#3B80BD')+
+#   geom_text(hjust=0, vjust=0) +
+#   theme(panel.background = element_blank(),
+#         axis.text.y = element_blank(),
+#         axis.ticks.y = element_blank())+
+#   labs(title ='Nivel educativo 2022',
+#        x = 'Nivel educativo',
+#        y = 'Cantidad',
+#        subtitle = 'cantidades por nivel educativo',
+#        caption = 'Fuente de datos : Ministerio de educación',
+#   )
+# grid.arrange(gg1, gg2, gg3, ncol=2)
 
 ######################################################################################
 # Dona con la descripcion del sexo
@@ -117,8 +164,7 @@ agrupSexo2
 # t2 = agrupSexo2[agrupSexo2$ID_ANIO == '2021', ]
 # t3 = agrupSexo2[agrupSexo2$ID_ANIO == '2022', ]
 # 
-# t1
-# ggplot(t1,aes(x=2,y=porcentaje, fill=SEXO))+
+# gt1 = ggplot(t1,aes(x=2,y=porcentaje, fill=SEXO))+
 #   geom_bar(stat = "identity",
 #            color="white")+
 #   geom_text(aes(label=percent(porcentaje)),
@@ -126,9 +172,31 @@ agrupSexo2
 #   coord_polar(theta = "y")+
 #   scale_fill_manual(values=c("#E11E1E","#3B80BD"))+
 #   theme_void()+
-#   labs(title="Gráfico de Dona")+
+#   labs(title="Género 2020")+
 #   xlim(0.5,2.5)
-
+# 
+# gt2 = ggplot(t2,aes(x=2,y=porcentaje, fill=SEXO))+
+#   geom_bar(stat = "identity",
+#            color="white")+
+#   geom_text(aes(label=percent(porcentaje)),
+#             position=position_stack(vjust=0.5),color="white",size=3)+
+#   coord_polar(theta = "y")+
+#   scale_fill_manual(values=c("#E11E1E","#3B80BD"))+
+#   theme_void()+
+#   labs(title="Género 2021")+
+#   xlim(0.5,2.5)
+# 
+# gt3 = ggplot(t3,aes(x=2,y=porcentaje, fill=SEXO))+
+#   geom_bar(stat = "identity",
+#            color="white")+
+#   geom_text(aes(label=percent(porcentaje)),
+#             position=position_stack(vjust=0.5),color="white",size=3)+
+#   coord_polar(theta = "y")+
+#   scale_fill_manual(values=c("#E11E1E","#3B80BD"))+
+#   theme_void()+
+#   labs(title="Género 2022")+
+#   xlim(0.5,2.5)
+# grid.arrange(gt1, gt2, gt3, ncol=2)
 ######################################################################################
 # Validacion de DNI
 
@@ -146,7 +214,7 @@ agrupValDNI2
 # u2 = agrupValDNI2[agrupValDNI2$ID_ANIO == '2021', ]
 # u3 = agrupValDNI2[agrupValDNI2$ID_ANIO == '2022', ]
 # 
-# ggplot(u3,aes(x=2,y=porcentaje, fill=VALIDACION_DNI))+
+# ug1 = ggplot(u1,aes(x=2,y=porcentaje, fill=VALIDACION_DNI))+
 #   geom_bar(stat = "identity",
 #            color="white")+
 #   geom_text(aes(label=percent(porcentaje)),
@@ -154,9 +222,31 @@ agrupValDNI2
 #   coord_polar(theta = "y")+
 #   scale_fill_manual(values=c("salmon","steelblue","orange","gray"))+
 #   theme_void()+
-#   labs(title="Distribucion % por genero")+
+#   labs(title="DNI Validados 2020")+
 #   xlim(0.5,2.5)
-
+# 
+# ug2 = ggplot(u2,aes(x=2,y=porcentaje, fill=VALIDACION_DNI))+
+#   geom_bar(stat = "identity",
+#            color="white")+
+#   geom_text(aes(label=percent(porcentaje)),
+#             position=position_stack(vjust=0.5),color="white",size=3)+
+#   coord_polar(theta = "y")+
+#   scale_fill_manual(values=c("salmon","steelblue","orange","gray"))+
+#   theme_void()+
+#   labs(title="DNI Validados 2021")+
+#   xlim(0.5,2.5)
+# 
+# ug3 = ggplot(u3,aes(x=2,y=porcentaje, fill=VALIDACION_DNI))+
+#   geom_bar(stat = "identity",
+#            color="white")+
+#   geom_text(aes(label=percent(porcentaje)),
+#             position=position_stack(vjust=0.5),color="white",size=3)+
+#   coord_polar(theta = "y")+
+#   scale_fill_manual(values=c("salmon","steelblue","orange","gray"))+
+#   theme_void()+
+#   labs(title="DNI Validados 2022")+
+#   xlim(0.5,2.5)
+# grid.arrange(ug1, ug2, ug3, ncol=2)
 ######################################################################################
 #PROCESAMIENTO DE DATA PARA DISCAPACIDAD
 
@@ -179,18 +269,51 @@ grupoDisc <- dfdiscFilt %>%
 # g2 = grupoDisc[grupoDisc$ID_ANIO == '2021', ]
 # g3 = grupoDisc[grupoDisc$ID_ANIO == '2022', ]
 # 
-# ggplot(g3, aes(x = DSC_DISCAPACIDAD, y=T_dfdisc)) +
+# gd1 = ggplot(g1, aes(x = DSC_DISCAPACIDAD, y=T_dfdisc)) +
 #   geom_bar(stat = "identity", fill='#3B80BD') +
 #   coord_flip() +
-#   xlab("DISCAPACIDAD") + 
-#   ylab("CANTIDAD DE ESTUDIANTES") +
+#   labs(title ='Discapacidad 2020',
+#        x = 'DISCAPACIDAD',
+#        y = 'CANTIDAD DE ESTUDIANTES',
+#        subtitle = 'cantidades por nivel educativo',
+#        caption = 'Fuente de datos : Ministerio de educación'
+#   ) + 
+#   theme(#axis.text.x =element_blank(),
+#     axis.ticks.x = element_blank(),
+#     axis.ticks.y = element_blank(),
+#     panel.background = element_blank()
+#   )
+# gd2 = ggplot(g2, aes(x = DSC_DISCAPACIDAD, y=T_dfdisc)) +
+#   geom_bar(stat = "identity", fill='#3B80BD') +
+#   coord_flip() +
+#   labs(title ='Discapacidad 2021',
+#        x = 'DISCAPACIDAD',
+#        y = 'CANTIDAD DE ESTUDIANTES',
+#        subtitle = 'cantidades por nivel educativo',
+#        caption = 'Fuente de datos : Ministerio de educación'
+#   ) +
 #   theme(#axis.text.x =element_blank(),
 #     axis.ticks.x = element_blank(),
 #     #axis.text.y = element_blank(),
 #     axis.ticks.y = element_blank(),
 #     panel.background = element_blank()
-#   ) 
-
+#   )
+# gd3 = ggplot(g3, aes(x = DSC_DISCAPACIDAD, y=T_dfdisc)) +
+#   geom_bar(stat = "identity", fill='#3B80BD') +
+#   coord_flip() +
+#   labs(title ='Discapacidad 2022',
+#        x = 'DISCAPACIDAD',
+#        y = 'CANTIDAD DE ESTUDIANTES',
+#        subtitle = 'cantidades por nivel educativo',
+#        caption = 'Fuente de datos : Ministerio de educación'
+#   ) +
+#   theme(#axis.text.x =element_blank(),
+#     axis.ticks.x = element_blank(),
+#     #axis.text.y = element_blank(),
+#     axis.ticks.y = element_blank(),
+#     panel.background = element_blank()
+#   )
+# grid.arrange(gd1, gd2, gd3, ncol=2)
 ######################################################################################
 #PROCESAMIENTO DE DATA PARA NACIONALIDAD
 
@@ -208,6 +331,7 @@ grupoPais <- dfpaisFilt %>%
   )
 
 ######################################################################################
+
 ui <- fluidPage(
   # theme = bslib::bs_theme(bootswatch = "yeti"),
   title = "Análisis de estudiantes",
@@ -251,13 +375,10 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  
   # thematic::thematic_shiny()
-  
   output$histogMatriculas <- renderPlot({
     # Gráfico
     subset = df_graph[df_graph$anho == input$anho, ]
-    
     
     id=factor(subset$formated_month, levels=c("Enero", "Febrero", "Marzo",
                                               "Abril", "Mayo", "Junio",
@@ -275,13 +396,9 @@ server <- function(input, output, session) {
       theme(panel.background = element_blank(),
             axis.text.y = element_blank(),
             axis.ticks.y = element_blank())
-    
-    
-    
   }, res = 96)
   
   output$histogNivEducativos <- renderPlot({
-    # Gráfico
     subsetNivEducativos = niveles_educativos[niveles_educativos$ID_ANIO == input$anho, ]
     
     ggplot(subsetNivEducativos, 
@@ -299,7 +416,7 @@ server <- function(input, output, session) {
       )
     
   }, res = 96)
-  # 
+
   output$histogSexo <- renderPlot({
     # Gráfico
     subsetSexo = agrupSexo2[agrupSexo2$ID_ANIO == input$anho, ]
@@ -315,7 +432,7 @@ server <- function(input, output, session) {
       labs(title="Género")+
       xlim(0.5,2.5)
   }, res = 96)
-  # 
+
   output$histogValidacionDNI <- renderPlot({
     subsetValDNI = agrupValDNI2[agrupValDNI2$ID_ANIO == input$anho, ]
 
@@ -329,11 +446,9 @@ server <- function(input, output, session) {
       theme_void()+
       labs(title="DNI Validados")+
       xlim(0.5,2.5)
-
   }, res = 96)
   
   output$grupDisc <- renderPlot({
-    
     subsetDiscapacidad = grupoDisc[grupoDisc$ID_ANIO == input$anho, ]
     
     ggplot(subsetDiscapacidad, aes(x = DSC_DISCAPACIDAD, y=T_dfdisc)) +
