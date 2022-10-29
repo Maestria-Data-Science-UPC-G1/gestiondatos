@@ -9,16 +9,23 @@ library(DBI)
 library(RMySQL)
 library(reshape2)
 
-id_host = "localhost"
+id_host = "dbmysql.ckvpndo3tqd7.us-east-1.rds.amazonaws.com"
 db <- dbConnect(RMySQL::MySQL(),
                 dbname = "bd_gestiondatos",
                 host = id_host,
-                user = "root",
-                password = rstudioapi::askForPassword("Database password"),
+                user = "admin",
+                password = rstudioapi::askForPassword("DB password"),
                 Port     = 3306)
+
+df <- dbGetQuery(db, 'SELECT * FROM estudiante')
 \end{lstlisting}
 
-\section{Evolución mensual de matrículas}\label{evolucion_matriculas}
+\section{Niveles educativos}\label{cod_niveles_educativos}
+\begin{lstlisting}[language=R]
+niveles_educativos = dbGetQuery(db, 'select NIVEL_EDUCATIVO,ID_ANIO,count(*)CNT from estudiante group by NIVEL_EDUCATIVO,ID_ANIO')
+\end{lstlisting}
+
+\section{Evolución mensual de matrículas}\label{cod_evolucion_matriculas}
 \begin{lstlisting}[language=R]
 getMonthDay = function(arrayMes) {
   month = as.Date(arrayMes)
@@ -33,7 +40,6 @@ getFormatedMonth <- function(arrayMes) {
   mo = nombre_meses[substr(arrayMes, 6, 7)]
 }
 
-df <- dbGetQuery(db, 'SELECT * FROM estudiante')
 df2 = df
 
 df2$month = getMonthDay(df2$FECHA_MATRICULA)
@@ -49,4 +55,222 @@ df_graph$formated_month = getFormatedMonth(df_graph$df2.month)
 df_graph$anho = substr(df_graph$df2.month, 1, 4)
 
 
+\end{lstlisting}
+
+\section{Discapacidad}\label{cod_discapacidad}
+\begin{lstlisting}[language=R]
+dfdisc = df[c("ID_ANIO","DSC_DISCAPACIDAD","ID_PERSONA")]
+
+dfdiscFilt <- dfdisc %>% filter(DSC_DISCAPACIDAD != "")
+
+dfdiscFilt
+
+grupoDisc <- dfdiscFilt %>%
+  group_by(ID_ANIO,DSC_DISCAPACIDAD) %>%
+  summarise(
+    T_dfdisc = n()
+  )
+\end{lstlisting}
+
+\section{Nacionalidades}\label{cod_nacionalidades}
+\begin{lstlisting}[language=R]
+dfpais <- df[c("ID_ANIO","NACIONALIDAD","ID_PERSONA")]
+
+dfpaisFilt <- dfpais %>%
+  filter(NACIONALIDAD != "Perú" & NACIONALIDAD != "PERU" & NACIONALIDAD != " " & NACIONALIDAD != "")
+
+grupoPais <- dfpaisFilt %>%
+  group_by(ID_ANIO,NACIONALIDAD) %>%
+  summarise(
+    CANTIDAD = n()
+  )
+\end{lstlisting}
+
+\section{Género}\label{cod_genero}
+\begin{lstlisting}[language=R]
+ValidCampos= df[,c(1, 20, 21)]
+ValidSexo = ValidCampos
+
+ValidSexo$SEXO = substr(ValidSexo$SEXO, 1, 6)
+ValidSexo <- ValidSexo[!is.na(ValidSexo$VALIDACION_DNI),]
+gruposSexo <- group_by(ValidSexo ,SEXO)
+agrupSexo = summarise(gruposSexo, num = n())
+
+agrupSexo2 = agrupSexo %>% as.data.frame()
+agrupSexo2$porcentaje <- prop.table(agrupSexo2$num)
+\end{lstlisting}
+
+\section{DNI Validados}\label{cod_dnivalidados}
+\begin{lstlisting}[language=R]
+ValidDNI = ValidCampos
+ValidDNI$SEXO = substr(ValidDNI$SEXO, 1, 6)
+ValidDNI <- ValidDNI[!is.na(ValidDNI$VALIDACION_DNI),]
+
+gruposValDNI <- group_by(ValidDNI, VALIDACION_DNI)
+agrupValDNI = summarise(gruposValDNI, num = n())
+agrupValDNI2 = agrupValDNI %>% as.data.frame()
+agrupValDNI2$porcentaje <- prop.table(agrupValDNI2$num)
+\end{lstlisting}
+
+\section{Shiny}\label{cod_shiny}
+\begin{lstlisting}[language=R]
+ui <- fluidPage(
+  # theme = bslib::bs_theme(bootswatch = "yeti"),
+  title = "Análisis de estudiantes",
+  titlePanel(
+    # Título del app o descripción
+    "Análisis de estudiantes"
+  ),
+  fluidRow(
+    selectInput(
+      "anho",
+      "Año:",
+      c("2020" = "2020",
+        "2021" = "2021",
+        "2022" = "2022"),
+      selected = "2020"
+    )
+  ),
+  fluidRow(
+    column(4,
+      plotOutput("histogNivEducativos")
+    ),
+    column(5,
+      plotOutput("histogMatriculas")
+    ),
+    column(3,
+      plotOutput("grupDisc")
+    )
+  ),
+  fluidRow(
+    column(6,
+           "Estudiantes de otra nacionalidad",
+           dataTableOutput("grupPais") 
+    ),
+    column(3,
+           plotOutput("histogSexo")
+    ),
+    column(3,
+           plotOutput("histogValidacionDNI")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  # thematic::thematic_shiny()
+  output$histogMatriculas <- renderPlot({
+    # Gráfico
+    subset = df_graph[df_graph$anho == input$anho, ]
+    
+    id=factor(subset$formated_month, levels=c("Enero", "Febrero", "Marzo",
+                                              "Abril", "Mayo", "Junio",
+                                              "Julio", "Agosto", "Setiembre",
+                                              "Octubre", "Noviembre", "Diciembre"))
+    
+    ggplot(subset, aes(x = id, y = df2.ID_PERSONA, label=df2.ID_PERSONA, group = 1)) +
+      geom_line(linetype = 2, colour = "#3B80BD", size = 1) + 
+      #geom_point(aes(size = 0.1)) +
+      #geom_point(aes(colour = "red")) +
+      geom_point(colour = "#3B80BD", size = 5) + 
+      geom_text(hjust=0, vjust=0) + 
+      labs(x = "Meses", y = "# Matrículas", 
+           title = "Evolución mensual de matrículas") +
+      theme(panel.background = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks.y = element_blank())
+  }, res = 96)
+  
+  output$histogNivEducativos <- renderPlot({
+    subsetNivEducativos = niveles_educativos[niveles_educativos$ID_ANIO == input$anho, ]
+    
+    ggplot(subsetNivEducativos, 
+           aes(x = NIVEL_EDUCATIVO, y = CNT, label=CNT)) +
+      geom_bar(stat = "identity",fill='#3B80BD')+
+      geom_text(hjust=0, vjust=0) +
+      theme(panel.background = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks.y = element_blank())+
+      labs(title ='Nivel educativo',
+           x = 'Nivel educativo',
+           y = 'Cantidad',
+           subtitle = 'cantidades por nivel educativo',
+           caption = 'Fuente de datos : Ministerio de educación'
+      )
+    
+  }, res = 96)
+
+  output$histogSexo <- renderPlot({
+    # Gráfico
+    ggplot(agrupSexo2,aes(x=2,y=porcentaje, fill=SEXO))+
+      geom_bar(stat = "identity",
+               color="white")+
+      geom_text(aes(label=percent(porcentaje)),
+                position=position_stack(vjust=0.5),color="white",size=3)+
+      coord_polar(theta = "y")+
+      scale_fill_manual(values=c("#E11E1E","#3B80BD"))+
+      theme_void()+
+      labs(title="Género")+
+      xlim(0.5,2.5)
+  }, res = 96)
+
+  output$histogValidacionDNI <- renderPlot({
+    ggplot(agrupValDNI2,aes(x=2,y=porcentaje, fill=VALIDACION_DNI))+
+      geom_bar(stat = "identity",
+               color="white")+
+      geom_text(aes(label=percent(porcentaje)),
+                position=position_stack(vjust=0.5),color="white",size=3)+
+      coord_polar(theta = "y")+
+      scale_fill_manual(values=c("salmon","steelblue","orange","gray"))+
+      theme_void()+
+      labs(title="DNI Validados")+
+      xlim(0.5,2.5)
+  }, res = 96)
+  
+  output$grupDisc <- renderPlot({
+    subsetDiscapacidad = grupoDisc[grupoDisc$ID_ANIO == input$anho, ]
+    
+    ggplot(subsetDiscapacidad, aes(x = DSC_DISCAPACIDAD, y=T_dfdisc)) +
+      geom_bar(stat = "identity", fill='#3B80BD') +
+      coord_flip() +
+      labs(title ='Discapacidad',
+           x = 'DISCAPACIDAD',
+           y = 'CANTIDAD DE ESTUDIANTES',
+           subtitle = 'cantidades por nivel educativo',
+           caption = 'Fuente de datos : Ministerio de educación'
+      ) +
+      theme(
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.background = element_blank()
+      ) 
+  })
+  
+  output$grupPais <- renderDataTable(
+    grupoPais[grupoPais$ID_ANIO == input$anho, ],
+    options = list(pageLength = 10, searching = FALSE)
+  )
+}
+
+shinyApp(ui, server)
+\end{lstlisting}
+
+\section{Representaciones de ubicación de instituciones educativas por mapa}\label{cod_mapas}
+\begin{lstlisting}[language=R]
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(tidyverse)
+library(sf)
+dfMapas = df
+dfMapas <- dfMapas[!is.na(dfMapas$NLONG_IE),]
+# sacar solo una muestra:
+dfMapMuestra<- dfMapas %>%
+  sample_n(size=1000,replace=FALSE)
+head(dfMapMuestra)
+str(dfMapMuestra)
+points = st_as_sf(dfMapMuestra, coords = c("NLONG_IE", "NLAT_IE"), crs = 4326)
+plot(st_geometry(points), pch=16, col="navy")
+
+library(mapview)
+mapview(dfMapMuestra, xcol = "NLONG_IE", ycol = "NLAT_IE", crs = 4269, grid = FALSE)
 \end{lstlisting}

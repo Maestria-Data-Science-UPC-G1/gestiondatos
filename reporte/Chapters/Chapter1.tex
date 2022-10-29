@@ -10,16 +10,36 @@
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\file}[1]{\texttt{\bfseries#1}}
 \newcommand{\option}[1]{\texttt{\itshape#1}}
-
 %-
+En el Sistema de Información de Apoyo a la Gestión de la Institución Educativa – SIAGIE, se realiza el registro administrativo de la trayectoria educativa del estudiante durante su permanencia en la Institución Educativa, basado en la información contenida en las nóminas de matrícula y actas de evaluación emitidas por las Instituciones Educativas o Programas Educativos. 
+
+El SIAGIE se configura por servicio educativo y se adecua a la normatividad vigente que regula los procesos de matrícula y evaluación de aprendizajes en las distintas modalidades de la Educación Básica. 
+
+\begin{enumerate}
+\item RM N° 609-2018-MINEDU 09-11-2018
+\item RM N° 665-2018-MINEDU 04-12-2018
+\item RVM N° 025-2019-MINEDU 10-02-2019
+\item RM N° 712-2018-MINEDU 21-12-2018
+\end{enumerate}
+
+\section{Objetivos}
+
+Alineados con los objetivos del área de estadística del ministerio de educación, los cuales son: 
+
+\begin{itemize}
+\item Realizar la crítica e interpretación de los datos estadísticos para su difusión y conocimiento de los órganos de la sede regional. 
+\item Consolidar a nivel regional la información preliminar de cada mes, reportadas por las UGEs. 
+\item Recopilar, consolidar, elaborar y difundir la información estadística básica cada mes.
+\item Realizar la estimación de la matrícula regional captada por muestreo y difundir al inicio del año lectivo, por el método de cifras relativas.
+\end{itemize}
 
 \section{Descripción de la información}
 
-En el presente trabajo se está realizando ...
+En el presente trabajo se está analizando las matrículas de los estudiantes de nivel inicial de Educación Básica Regular de los años 2020, 2021, 2022, con la finalidad de conocer diversos factores que involucran una matrícula correctamente realizada, como también los datos de los estudiantes, los cuales deben ser registrados correctamente en la plataforma; logrando un seguimiento mensual de dicho estado, entre otras características.
 
 \section{Datos utilizados}
 
-La información con la que se va a trabajar está conformada por los datos de alumnos de niveles inicial, primaria y secundaria de colegios en todo el Perú, esta información corresponde a los 3 últimos años, el detalle de esta entidad se ve en la tabla Table~\ref{tab:estudiantes}
+La información con la que se va a trabajar está conformada por los datos de alumnos de niveles inicial, primaria y secundaria de colegios en todo el Perú, esta información corresponde a los 3 últimos años, el detalle de esta entidad se ve en la tabla~\ref{tab:estudiantes}
 
 \begin{table}
 \caption{Detalle de los campos de la entidad estudiante}
@@ -27,41 +47,42 @@ La información con la que se va a trabajar está conformada por los datos de al
 \centering
 \begin{tabular}{l l l}
 \toprule
-\tabhead{Columna} & \tabhead{Descripción}\\
+\tabhead{Columna} & \tabhead{Descripción} & \tabhead{Tipo}\\
 \midrule
-ID Año & Identificador del año escolar\\
-Departamento & Nombre del departamento\\
-Provincia & Nombre de la provincia\\
-Distrito & Nombre del distrito\\
-Centro Poblado & Centro poblado \\
-NLongitud IE & Coordenada de la longitud de la IE \\
-NLatitud IE & Coordenada de la latitud de la IE\\
-DRE & Dirección regional de educación\\
-UGEL & Ugel a la que pertenece la IE\\
-Cod Mod & NN\\
-Anexo & NN\\
-Nombre IE & Nombre de la Institución educativa\\
-D Gestión & NN\\
-Dsc Turno & Descripción del turno\\
-Modalidad & Modalidad\\
-Nivel Educativo & Nivel en el que se encuentra el estudiante\\
-Fecha Matrícula & Fecha de la matrícula\\
-ID Persona & Identificador del estudiante\\
-Documento Identidad & Documento de identidad\\
-Sexo & Sexo del alumno\\
-Madre vive & Indicador si la madre vive\\
-Padre vive & Indicador si el padre vive\\
-Dsc Grado & Descripción del grado\\
-Dsc Sección & Descripción de la sección\\
-Nacionalidad & Nacionalidad del estudiante\\
-Dsc Discapacidad & Descripción de discapacidad\\
-Dirección & Dirección del estudiante\\
-Lugar & Lugar de la dirección\\
-Ubigeo & Ubigeo del estudiante\\
+ID Año & Identificador del año escolar & ID\\
+Departamento & Nombre del departamento & cualitativa - nominal\\
+Provincia & Nombre de la provincia & cualitativa - nominal\\
+Distrito & Nombre del distrito & cualitativa - nominal\\
+Centro Poblado & Centro poblado & cualitativa - nominal\\
+NLongitud IE & Coordenada de la longitud de la IE & cuantitativa - continua \\
+NLatitud IE & Coordenada de la latitud de la IE & cuantitativa -continua\\
+DRE & Dirección regional de educación & cualitativa - nominal\\
+UGEL & Ugel a la que pertenece la IE & cualitativa - nominal\\
+Cod Mod & Código modular & ID\\
+Anexo & Anexo & cualitativa - nominal\\
+Nombre IE & Nombre de la Institución educativa & cualitativa - nominal\\
+D Gestión & Dirección de gestión & cualitativa - nominal\\
+Dsc Turno & Descripción del turno & cualitativa - nominal\\
+Modalidad & Modalidad & cualitativa - nominal\\
+Nivel Educativo & Nivel en el que se encuentra el estudiante & cualitativa - ordinal\\
+Fecha Matrícula & Fecha de la matrícula & cuantitativa - ordinal\\
+ID Persona & Identificador del estudiante & ID\\
+Documento Identidad & Documento de identidad & ID\\
+Sexo & Sexo del alumno & cualitativa - nomial\\
+Madre vive & Indicador si la madre vive & cualitativa - nominal\\
+Padre vive & Indicador si el padre vive & cualitativa - nominal\\
+Dsc Grado & Descripción del grado & cualitativa - ordinal\\
+Dsc Sección & Descripción de la sección & cualitativa - ordinal\\
+Nacionalidad & Nacionalidad del estudiante & cualitativa - nominal\\
+Dsc Discapacidad & Descripción de discapacidad & cualitativa - nominal\\
+Dirección & Dirección del estudiante & cualitativa - nominal\\
+Lugar & Lugar de la dirección & cualitativa - nominal\\
+Ubigeo & Ubigeo del estudiante & cualitativa - nominal\\
 \bottomrule\\
 \end{tabular}
 \end{table}
 
 \section{Importancia de los datos}
 
-Debido a que la información trabajada proviene del ámbito educativo de níveles básicos, se pueden generar estadísticas para poder evaluar el estado actual educativo, ...
+Debido a que la información trabajada proviene del ámbito educativo de níveles básicos, se pueden generar estadísticas para poder evaluar el estado actual educativo.\\
+A continuación, se utiliza R Studio y Shiny para implementar un dashboard que permita realizar el seguimiento mensual. Cada uno de los gráficos ayudará a identificar por año el incremento o caída de cada variable mostrada; esta información permitirá tomar cualquier acción preventiva o mejoras frente a la educación inicial.
