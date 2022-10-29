@@ -7,11 +7,11 @@ library(dplyr)
 library(scales)
 library(lessR)
 
-id_host = "localhost"
+id_host = "dbmysql.ckvpndo3tqd7.us-east-1.rds.amazonaws.com"
 db <- dbConnect(RMySQL::MySQL(),
                 dbname = "bd_gestiondatos",
                 host = id_host,
-                user = "root",
+                user = "admin",
                 password = rstudioapi::askForPassword("DB password"),
                 Port     = 3306)
 
